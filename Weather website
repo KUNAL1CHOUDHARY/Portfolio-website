@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather App</h1>
+        <div class="weather-container">
+            <div class="weather">
+                <h2 id="location">Fetching...</h2>
+                <p id="temperature">Temperature: --</p>
+                <p id="description">Description: --</p>
+                <p id="humidity">Humidity: --</p>
+                <p id="wind">Wind Speed: --</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+.weather-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.weather {
+    text-align: left;
+    margin-top: 20px;
+}
+
+h1 {
+    color: #333333;
+}
+
+p {
+    margin: 10px 0;
+}
+
+
+// Replacing with our OpenWeatherMap API key
+const apiKey = 'YOUR_OPENWEATHERMAP_API_KEY';
+// Replace with your desired city and country code
+const city = 'New York';
+const countryCode = 'US';
+
+const apiURL = `https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&units=metric&appid=${apiKey}`;
+
+const locationElement = document.getElementById('location');
+const temperatureElement = document.getElementById('temperature');
+const descriptionElement = document.getElementById('description');
+const humidityElement = document.getElementById('humidity');
+const windElement = document.getElementById('wind');
+
+// Fetching weather data from API
+fetch(apiURL)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        locationElement.textContent = `${data.name}, ${data.sys.country}`;
+        temperatureElement.textContent = `Temperature: ${data.main.temp} °C`;
+        descriptionElement.textContent = `Description: ${data.weather[0].description}`;
+        humidityElement.textContent = `Humidity: ${data.main.humidity} %`;
+        windElement.textContent = `Wind Speed: ${data.wind.speed} m/s`;
+    })
+    .catch(error => {
+        console.log('Error fetching weather data:', error);
+        locationElement.textContent = 'Error fetching weather';
+    });
